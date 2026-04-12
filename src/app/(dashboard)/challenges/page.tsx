@@ -63,7 +63,7 @@ export default function ChallengesPage() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 320px) 1fr', gap: 32, alignItems: 'start' }} className="responsive-challenges-grid">
         {/* Sidebar filters */}
-        <aside style={{ position: 'sticky', top: 90 }}>
+        <aside style={{ position: 'sticky', top: 90 }} className="filter-sidebar">
           <div style={{
             background: 'rgba(13,17,23,0.7)',
             border: '1px solid rgba(255,255,255,0.08)',
@@ -129,6 +129,11 @@ export default function ChallengesPage() {
         @media (max-width: 1024px) {
           .responsive-challenges-grid {
             grid-template-columns: 1fr !important;
+          }
+          .filter-sidebar {
+            position: relative !important;
+            top: 0 !important;
+            z-index: 10;
           }
         }
       `}</style>

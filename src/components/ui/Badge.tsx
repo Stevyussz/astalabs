@@ -7,6 +7,7 @@ interface BadgeProps {
   children: React.ReactNode;
   variant?: BadgeVariant;
   className?: string; // Kept for API compatibility, though styles are inline
+  style?: React.CSSProperties;
 }
 
 // Maps [Color, Background, Border]
@@ -30,7 +31,7 @@ const variantStyles: Partial<Record<BadgeVariant, [string, string, string]>> = {
   insane: ['#f87171', 'rgba(239,68,68,0.15)', 'rgba(239,68,68,0.3)'],
 };
 
-export function Badge({ children, variant = 'default', className }: BadgeProps) {
+export function Badge({ children, variant = 'default', className, style }: BadgeProps) {
   const [color, bg, border] = variantStyles[variant] ?? variantStyles.default!;
 
   return (
@@ -44,6 +45,7 @@ export function Badge({ children, variant = 'default', className }: BadgeProps) 
         color: color,
         background: bg,
         border: `1px solid ${border}`,
+        ...style,
       }}
     >
       {children}

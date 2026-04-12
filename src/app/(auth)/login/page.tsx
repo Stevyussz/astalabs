@@ -1,5 +1,7 @@
 // src/app/(auth)/login/page.tsx
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
 import { LoginForm } from './LoginForm';
 
 export const metadata: Metadata = {
@@ -7,7 +9,12 @@ export const metadata: Metadata = {
   description: 'Masuk ke akun AstaLabs Anda.',
 };
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await auth();
+  if (session?.user) {
+    redirect('/challenges');
+  }
+
   return (
     <div style={{
       minHeight: 'calc(100vh - 68px)',

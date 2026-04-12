@@ -15,6 +15,7 @@ export function RegisterForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [globalError, setGlobalError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const update = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -52,26 +53,33 @@ export function RegisterForm() {
         return;
       }
 
-      // Auto-login after successful registration
-      const loginResult = await signIn('credentials', {
-        email: form.email,
-        password: form.password,
-        redirect: false,
-      });
-
-      if (loginResult?.error) {
+      // Show success animation
+      setShowSuccess(true);
+      
+      // Delay before redirecting to login page
+      setTimeout(() => {
         router.push('/login');
-        return;
-      }
+      }, 2500);
 
-      router.push('/challenges');
-      router.refresh();
     } catch {
       setGlobalError('Terjadi kesalahan yang tidak terduga. Silakan coba lagi.');
-    } finally {
       setIsLoading(false);
     }
   };
+
+  if (showSuccess) {
+    return (
+      <div style={{ textAlign: 'center', padding: '40px 20px', animation: 'fade-in-up 0.5s ease-out forwards' }}>
+        <div style={{ fontSize: '48px', marginBottom: '20px', animation: 'pulse 1.5s infinite' }}>✅</div>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#00ff88', marginBottom: '16px', fontFamily: 'JetBrains Mono, monospace' }}>
+          AKSES DITERIMA
+        </h2>
+        <p style={{ color: 'rgba(226,232,240,0.7)', fontSize: '15px' }}>
+          Identitas berhasil didaftarkan di matriks. Mengalihkan ke gerbang otentikasi...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">

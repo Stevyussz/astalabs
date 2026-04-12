@@ -16,6 +16,7 @@ export function LoginForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [globalError, setGlobalError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,17 +47,36 @@ export function LoginForm() {
 
       if (result?.error) {
         setGlobalError('Email atau password salah nih. Coba cek lagi deh.');
+        setIsLoading(false);
         return;
       }
 
-      router.push('/challenges');
-      router.refresh();
+      setShowSuccess(true);
+      
+      setTimeout(() => {
+        router.push('/challenges');
+        router.refresh();
+      }, 2500);
+
     } catch {
       setGlobalError('Terjadi kesalahan yang tidak terduga. Silakan coba lagi.');
-    } finally {
       setIsLoading(false);
     }
   };
+
+  if (showSuccess) {
+    return (
+      <div style={{ textAlign: 'center', padding: '40px 20px', animation: 'fade-in-up 0.5s ease-out forwards' }}>
+        <div style={{ fontSize: '48px', marginBottom: '20px', animation: 'pulse 1.5s infinite', fontFamily: 'JetBrains Mono, monospace', color: '#00ff88' }}>{'</>'}</div>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#00ff88', marginBottom: '16px', fontFamily: 'JetBrains Mono, monospace' }}>
+          LOGIN BERHASIL
+        </h2>
+        <p style={{ color: 'rgba(226,232,240,0.7)', fontSize: '15px' }}>
+          Menyiapkan *environment* peretasan. Hold on operative...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
