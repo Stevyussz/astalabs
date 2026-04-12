@@ -51,7 +51,7 @@ export default function AcademyPage() {
               opacity: mod.status === 'tersedia' ? 1 : 0.6,
             }}
           >
-            <div style={{
+            <div className={`academy-card ${mod.status === 'tersedia' ? 'academy-card-available' : ''}`} style={{
               background: 'rgba(255,255,255,0.02)',
               border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: 16,
@@ -61,20 +61,7 @@ export default function AcademyPage() {
               boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
               position: 'relative',
               overflow: 'hidden',
-            }}
-            onMouseOver={(e) => {
-              if (mod.status === 'tersedia') {
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-              }
-            }}
-            onMouseOut={(e) => {
-              if (mod.status === 'tersedia') {
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }
-            }}
-            >
+            }}>
               <div style={{ position: 'absolute', top: -20, right: -20, opacity: 0.05, transform: 'scale(3)' }}>
                 {mod.icon}
               </div>
@@ -96,6 +83,12 @@ export default function AcademyPage() {
           </Link>
         ))}
       </div>
+      <style>{`
+        .academy-card-available:hover {
+          border-color: rgba(255,255,255,0.2) !important;
+          transform: translateY(-4px) !important;
+        }
+      `}</style>
     </div>
   );
 }
