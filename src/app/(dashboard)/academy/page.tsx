@@ -44,7 +44,7 @@ export default function AcademyPage() {
         {MODULES.map(mod => (
           <Link
             key={mod.id}
-            href={mod.status === 'tersedia' ? `/academy/${mod.id}` : '#'}
+            href={mod.status === 'tersedia' ? `/academy/${mod.id}/1` : '#'}
             style={{
               textDecoration: 'none',
               cursor: mod.status === 'tersedia' ? 'pointer' : 'default',
