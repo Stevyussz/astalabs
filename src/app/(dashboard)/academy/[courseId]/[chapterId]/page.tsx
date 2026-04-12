@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Icons } from '@/components/ui/Icons';
 import { Badge } from '@/components/ui/Badge';
 import { getCourseById, Course, Chapter } from '@/data/academy';
@@ -14,6 +15,9 @@ import { use } from 'react';
 // However, typically in client components standard params work, but let's use the new Next.js 15/16 standard.
 export default function AcademyChapterPage({ params }: { params: Promise<{ courseId: string; chapterId: string }> }) {
   const resolvedParams = use(params);
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
   const course = getCourseById(resolvedParams.courseId);
   const chapterIdx = course?.chapters.findIndex(c => c.id === resolvedParams.chapterId) ?? -1;
   const currentChapter = course?.chapters[chapterIdx];
@@ -22,6 +26,56 @@ export default function AcademyChapterPage({ params }: { params: Promise<{ cours
 
   if (!course || !currentChapter) {
     return notFound();
+  }
+
+  // --- HACKER LOADING STATE ---
+  if (status === 'loading') {
+    return (
+      <div style={{ minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#080b10' }}>
+        <div style={{ fontSize: '48px', color: '#00ff88', marginBottom: '20px', animation: 'pulse 1s infinite', fontFamily: 'JetBrains Mono, monospace' }}>
+          {'[||||||  ]'}
+        </div>
+        <p style={{ color: '#00ff88', fontFamily: 'JetBrains Mono, monospace', fontSize: '14px', letterSpacing: '0.2em' }}>
+          DECRYPTING MODULE...
+        </p>
+      </div>
+    );
+  }
+
+  // --- TIME LOCK LOGIC (1 Hour Karantina) ---
+  const userCreatedAt = session?.user ? (session.user as any).createdAt : null;
+  if (userCreatedAt) {
+    const createdAt = new Date(userCreatedAt).getTime();
+    const now = Date.now();
+    const oneHour = 60 * 60 * 1000;
+    
+    if (now - createdAt < oneHour) {
+      const remainingMinutes = Math.ceil((oneHour - (now - createdAt)) / 60000);
+      return (
+        <div style={{ minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px', textAlign: 'center', backgroundColor: '#080b10' }}>
+          <div style={{ 
+            background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.2)', 
+            borderRadius: '16px', padding: '40px', maxWidth: '500px',
+            animation: 'pulse 3s infinite',
+            boxShadow: '0 0 40px rgba(239,68,68,0.1) inset' 
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+              <Icons.Lock size={48} color="#ef4444" />
+            </div>
+            <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#ef4444', marginBottom: '12px', letterSpacing: '2px', fontFamily: 'JetBrains Mono, monospace' }}>
+              AKSES DITOLAK
+            </h1>
+            <p style={{ color: 'rgba(226,232,240,0.7)', fontSize: '15px', lineHeight: '1.6', marginBottom: '24px' }}>
+              Anda belum diizinkan membuka arsip rahasia ini. Akun baru harus melewati masa karantina selama 1 jam.
+            </p>
+            <div style={{ background: '#000', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontFamily: 'JetBrains Mono, monospace', color: '#f59e0b', fontSize: '14px', marginBottom: '24px' }}>
+              Waktu Karantina Tersisa: {remainingMinutes} Menit
+            </div>
+            <button onClick={() => router.push('/academy')} style={{ background: 'transparent', border: '1px solid #ef4444', color: '#ef4444', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold' }}>Kembali</button>
+          </div>
+        </div>
+      );
+    }
   }
 
   const hasLab = !!currentChapter.labUrl;
@@ -149,7 +203,7 @@ export default function AcademyChapterPage({ params }: { params: Promise<{ cours
 
         {/* === RIGHT: PLAYGROUND === */}
         {hasLab && (
-          <div className={`md:flex flex-col w-full md:w-1/2 lg:w-1/2 bg-[#080b10] relative ${activeTab === 'playground' ? 'block' : 'hidden'} flex-shrink-0`}>
+          <div className={`md:flex flex-col w-full md:w-1/2 lg:w-1/2 bg-[#080b10] relative ${activeTab === 'playground' ? 'flex' : 'hidden'} flex-shrink-0 min-h-[60vh] md:min-h-0`}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 40, background: '#1e293b', display: 'flex', alignItems: 'center', padding: '0 16px', gap: 8, zIndex: 10 }}>
               <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#ef4444' }} />
               <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#eab308' }} />

@@ -101,6 +101,7 @@ export interface SessionUser {
   username: string;
   email: string;
   score: number;
+  createdAt: string;
 }
 
 // ─── API Response Wrapper ────────────────────────────────────────────────────

@@ -24,6 +24,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: user.username,
           email: user.email,
           score: user.score,
+          createdAt: user.createdAt,
         };
       },
     }),
@@ -34,6 +35,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id ?? '';
         token.username = (user.name ?? '') as string;
         token.score = ((user as unknown as Record<string, unknown>).score as number) ?? 0;
+        token.createdAt = ((user as unknown as Record<string, unknown>).createdAt as string) ?? new Date().toISOString();
       }
       return token;
     },
@@ -41,6 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.id = token.id as string;
       session.user.username = token.username as string;
       session.user.score = token.score as number;
+      (session.user as any).createdAt = token.createdAt as string;
       return session;
     },
   },

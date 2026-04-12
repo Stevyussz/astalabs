@@ -1,5 +1,6 @@
 import { ScoreboardEntry } from '@/types';
 import { Icons } from '@/components/ui/Icons';
+import Link from 'next/link';
 
 interface ScoreboardTableProps {
   entries: ScoreboardEntry[];
@@ -86,7 +87,7 @@ export function ScoreboardTable({ entries, currentUserId }: ScoreboardTableProps
                   )}
                 </td>
                 <td style={{ padding: '16px 24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <Link href={`/profile/${encodeURIComponent(entry.username)}`} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{
                       width: 32, height: 32, borderRadius: '50%',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -94,16 +95,17 @@ export function ScoreboardTable({ entries, currentUserId }: ScoreboardTableProps
                       background: isCurrentUser ? 'rgba(0,255,136,0.2)' : isTopThree ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
                       color: isCurrentUser ? '#00ff88' : isTopThree ? '#e2e8f0' : 'rgba(226,232,240,0.6)',
                       border: isCurrentUser ? '1px solid rgba(0,255,136,0.3)' : isTopThree ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
-                    }}>
+                      transition: 'all 0.2s',
+                    }} className="avatar-ring">
                       {entry.username[0]?.toUpperCase() ?? '?'}
                     </div>
-                    <span style={{ fontSize: 15, fontWeight: isCurrentUser ? 600 : 500, color: isCurrentUser ? '#00ff88' : '#e2e8f0' }}>
+                    <span style={{ fontSize: 15, fontWeight: isCurrentUser ? 600 : 500, color: isCurrentUser ? '#00ff88' : '#e2e8f0', transition: 'color 0.2s' }} className="username-hover">
                       {entry.username}
                       {isCurrentUser && (
                         <span style={{ marginLeft: 8, fontSize: 12, color: 'rgba(0,255,136,0.6)', fontWeight: 400 }}>(Lo)</span>
                       )}
                     </span>
-                  </div>
+                  </Link>
                 </td>
                 <td style={{ padding: '16px 24px', textAlign: 'right' }}>
                   <span style={{ fontSize: 14, color: 'rgba(226,232,240,0.5)', fontFamily: 'JetBrains Mono, monospace' }}>
@@ -124,6 +126,8 @@ export function ScoreboardTable({ entries, currentUserId }: ScoreboardTableProps
       {/* Inject a tiny style block for the row hover */}
       <style dangerouslySetInnerHTML={{__html: `
         .sb-row:hover { background-color: rgba(255,255,255,0.05) !important; border-left-color: rgba(255,255,255,0.2) !important; }
+        .sb-row a:hover .username-hover { color: #00ff88 !important; }
+        .sb-row a:hover .avatar-ring { border-color: rgba(0,255,136,0.5) !important; box-shadow: 0 0 10px rgba(0,255,136,0.2); }
       `}} />
     </div>
   );

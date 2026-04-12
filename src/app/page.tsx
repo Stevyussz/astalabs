@@ -38,7 +38,7 @@ export default function HomePage() {
 
         {/* Headline */}
         <h1 style={{ fontSize: 'clamp(2.8rem, 8vw, 5.5rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', margin: '0 auto 28px' }}>
-          <span style={{ display: 'block', color: '#e2e8f0' }}>Belajar.<span style={{ opacity: 0.6 }}> Praktik.</span></span>
+          <span style={{ display: 'block', color: '#e2e8f0' }}>Hack.<span style={{ opacity: 0.6 }}> Belajar.</span></span>
           <span style={{
             display: 'block', marginTop: 12, paddingBottom: 8,
             background: 'linear-gradient(135deg, #00ff88 0%, #00d4ff 100%)',
@@ -46,7 +46,7 @@ export default function HomePage() {
             backgroundClip: 'text',
             filter: 'drop-shadow(0 0 24px rgba(0,255,136,0.5))',
           }}>
-            Sikat Ranking.
+            Uji Nyali.
           </span>
         </h1>
 

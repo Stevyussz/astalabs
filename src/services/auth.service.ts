@@ -56,6 +56,7 @@ export class AuthService {
       username: user.username,
       email: user.email,
       score: user.score,
+      createdAt: user.createdAt.toISOString(),
     };
   }
 
