@@ -84,6 +84,36 @@ export const COURSES: Course[] = [
         `,
         labUrl: '/labs/bocor-halus',
         labInstruction: 'Di Lab ini terdapat direktori karyawan. Di layarmu nampaknya normal-normal saja, hanya sebatas Nama dan Jabatan. Buka Inspect Element, pergi ke tab **Network**, dan klik tombol "Sinkronisasi Ulang". Carilah file JSON yang tumpah dan baca informasi sensitifnya!',
+      },
+      {
+        id: '5',
+        title: 'Bab 5: Papan Petunjuk (Robots.txt)',
+        content: `
+          <p>Kebutuhan SEO seringkali memaksa developer untuk menuntun robot search engine (seperti Googlebot) agar hanya mengindeks halaman tertentu saja.</p>
+          <br/>
+          <h2 style="font-size:20px; font-weight:700; color:#e2e8f0; margin-bottom:8px">Information Disclosure via robots.txt</h2>
+          <p>File <code>robots.txt</code> adalah file publik. Masalahnya, developer sering menuliskan direktori "rahasia" atau "admin" di sana dengan instruksi <code>Disallow</code> (jangan diintip).</p>
+          <p>Bagi robot, itu larangan. Tapi bagi hacker, itu adalah <strong>daftar peta harta karun</strong> yang memberitahu di mana letak halaman-halaman sensitif disimpan.</p>
+          <br />
+          <p>Selalu cek <code>/robots.txt</code> di setiap targetmu!</p>
+        `,
+        labUrl: '/labs/robots.txt',
+        labInstruction: 'Sistem Bunker Rahasia AstaLabs sedang disembunyikan dari publik. Coba akses file peta petunjuk robot sistem ini (robots.txt) dan temukan di mana admin menyembunyikan "Secret Bunker" mereka!',
+      },
+      {
+        id: '6',
+        title: 'Bab 6: Sandi Alien (Encoding)',
+        content: `
+          <p>Encoding bukan enkripsi. Encoding hanyalah cara untuk merubah format data agar bisa dikirim dengan aman di internet (misal: mengirim gambar/binari lewat teks).</p>
+          <br/>
+          <h2 style="font-size:20px; font-weight:700; color:#e2e8f0; margin-bottom:8px">Base64 Encoding</h2>
+          <p>Base64 adalah salah satu standar encoding paling umum. Ciri khasnya adalah penggunaan karakter A-Z, a-z, 0-9, serta karakter khusus '+' dan '/'.</p>
+          <p>Jika sebuah pesan diakhiri dengan satu atau dua tanda sama dengan (<code>=</code>), hampir pasti itu adalah Base64 (tanda itu disebut *padding*).</p>
+          <br />
+          <p>Hacking seringkali melibatkan proses mengubah balik (Decoding) pesan-pesan ini untuk melihat data aslinya.</p>
+        `,
+        labUrl: '/labs/pesan-alien',
+        labInstruction: 'Kita menangkap sinyal transmisi alien. Signal ini nampak seperti encoded text. Gunakan instingmu, perhatikan pola karakternya, dan terjemahkan pesan tersebut untuk mendapatkan flag!',
       }
     ]
   }
