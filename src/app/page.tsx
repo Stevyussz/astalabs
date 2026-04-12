@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { Icons } from '@/components/ui/Icons';
 
 export const metadata: Metadata = {
-  title: 'AstaLabs | Hack. Belajar. Sikat Ranking.',
-  description: 'Join kompetisi CTF paling gokil. Sikat misi hacking real-world: web, crypto, forensics, pwn, dan banyak lagi.',
+  title: 'AstaLabs | Academy & Hacker Playground',
+  description: 'Platform edukasi cybersecurity end-to-end. Dari teori dasar di Academy hingga praktik eksploitasi live di Playground.',
 };
 
 const stats = [
@@ -38,7 +38,7 @@ export default function HomePage() {
 
         {/* Headline */}
         <h1 style={{ fontSize: 'clamp(2.8rem, 8vw, 5.5rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', margin: '0 auto 28px' }}>
-          <span style={{ display: 'block', color: '#e2e8f0' }}>Hack.<span style={{ opacity: 0.6 }}> Belajar.</span></span>
+          <span style={{ display: 'block', color: '#e2e8f0' }}>Belajar.<span style={{ opacity: 0.6 }}> Praktik.</span></span>
           <span style={{
             display: 'block', marginTop: 12, paddingBottom: 8,
             background: 'linear-gradient(135deg, #00ff88 0%, #00d4ff 100%)',
@@ -46,18 +46,18 @@ export default function HomePage() {
             backgroundClip: 'text',
             filter: 'drop-shadow(0 0 24px rgba(0,255,136,0.5))',
           }}>
-            Capture The Flag.
+            Sikat Ranking.
           </span>
         </h1>
 
         {/* Subheading */}
         <p style={{ maxWidth: 600, margin: '0 auto 48px', fontSize: 'clamp(1rem,2.5vw,1.2rem)', color: 'rgba(226,232,240,0.6)', lineHeight: 1.7 }}>
-          Asah skill hacking kamu lewat tantangan nyata: web exploitation, crypto, reverse engineering, dan masih banyak lagi.
+          Sistem belajar komplit buat hacker. Pahami teorinya lewat <strong>AstaLabs Academy</strong>, lalu eksekusi tekniknya langsung di <strong>Live Playground</strong>.
         </p>
 
         {/* CTAs */}
         <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/register" style={{
+          <Link href="/academy" style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             height: 52, padding: '0 32px', borderRadius: 12,
             fontSize: 15, fontWeight: 700, textDecoration: 'none',
@@ -66,7 +66,7 @@ export default function HomePage() {
             border: '1px solid rgba(0,255,136,0.6)',
             transition: 'all 0.25s',
           }}>
-            Gas Hacking! →
+            Mulai Belajar (Academy) →
           </Link>
           <Link href="/challenges" style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -77,7 +77,7 @@ export default function HomePage() {
             border: '1px solid rgba(255,255,255,0.12)',
             transition: 'all 0.25s',
           }}>
-            Cek List Misi
+            Masuk Playground
           </Link>
         </div>
       </section>

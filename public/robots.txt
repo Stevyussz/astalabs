@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# The developers requested we hide the legacy admin portal from Google
+Disallow: /admin
+Disallow: /api/internal
+
+# DO NOT INDEX THE COMMAND CENTER BUNKER! IT HAS NO AUTH!!!
+Disallow: /labs/secret-bunker-77

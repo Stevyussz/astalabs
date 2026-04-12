@@ -6,7 +6,8 @@ import { useSession, signOut } from 'next-auth/react';
 import { useState } from 'react';
 
 const navLinks = [
-  { href: '/challenges', label: 'Misi' },
+  { href: '/academy', label: 'Academy' },
+  { href: '/challenges', label: 'Playground' },
   { href: '/scoreboard', label: 'Ranking' },
 ];
 
