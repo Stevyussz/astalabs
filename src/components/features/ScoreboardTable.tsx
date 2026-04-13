@@ -1,6 +1,7 @@
 import { ScoreboardEntry } from '@/types';
 import { Icons } from '@/components/ui/Icons';
 import Link from 'next/link';
+import { calculateLevel } from '@/lib/levelUtils';
 
 interface ScoreboardTableProps {
   entries: ScoreboardEntry[];
@@ -99,10 +100,17 @@ export function ScoreboardTable({ entries, currentUserId }: ScoreboardTableProps
                     }} className="avatar-ring">
                       {entry.username[0]?.toUpperCase() ?? '?'}
                     </div>
-                    <span style={{ fontSize: 15, fontWeight: isCurrentUser ? 600 : 500, color: isCurrentUser ? '#00ff88' : '#e2e8f0', transition: 'color 0.2s' }} className="username-hover">
+                    <span style={{ fontSize: 15, fontWeight: isCurrentUser ? 600 : 500, color: isCurrentUser ? '#00ff88' : '#e2e8f0', transition: 'color 0.2s', display: 'flex', alignItems: 'center', gap: 6 }} className="username-hover">
                       {entry.username}
+                      <span style={{ 
+                        fontSize: 10, padding: '2px 6px', borderRadius: 4, 
+                        background: 'rgba(0,255,136,0.1)', color: '#00ff88', 
+                        fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 
+                      }}>
+                        Lv.{calculateLevel(entry.score)}
+                      </span>
                       {isCurrentUser && (
-                        <span style={{ marginLeft: 8, fontSize: 12, color: 'rgba(0,255,136,0.6)', fontWeight: 400 }}>(Lo)</span>
+                        <span style={{ marginLeft: 4, fontSize: 12, color: 'rgba(0,255,136,0.6)', fontWeight: 400 }}>(Lo)</span>
                       )}
                     </span>
                   </Link>

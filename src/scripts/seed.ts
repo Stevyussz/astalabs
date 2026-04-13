@@ -76,23 +76,24 @@ const challenges = [
   {
     title: 'Pergeseran Julius',
     category: 'crypto',
-    difficulty: 'easy',
-    description: `Intel mendapatkan transmisi ini: \`PGI{p43f4e_p1cu3e_1f_g00_01q}\`\n\n*Lokasi Lab*: \`/labs/caesar-cipher\`\n\nKelihatan seperti ROTation cipher klasik (sandi Caesar). Pakai decoder di atas untuk mencari kunci yang pas (Shift ke berapa).`,
+    difficulty: 'medium',
+    points: 150,
+    description: 'Zaman Romawi, kaisar mengirim pesan ke jenderalnya dengan menggeser huruf. \n Ciphertext: `HYS{h4h8h4_h1um8_1x_y00_01i}` (Shift = 5)',
     flag: 'CTF{c43s4r_c1ph3r_1s_t00_01d}',
-    points: 100,
     hints: [
-      { content: "Format tulisan ini jelas harusnya CTF{...}. Dari huruf P ke C, itu mundur atau maju berapa langkah?", cost: 10 }
+      { content: 'Gunakan CyberChef dan cari modul ROT13 / Caesar Cipher, atur shift/amount sesuai deskripsi.', cost: 30 },
     ],
   },
   {
     title: 'Harta Karun Piksel',
     category: 'forensics',
     difficulty: 'medium',
-    description: `Direktori penyimpanan AstaLabs menyimpan sebuah gambar. Tidak ada teks yang terlihat secara visual.\n\n*Lokasi Lab*: \`/labs/stegano-exif\`\n\nDownload gambar SVG tersebut lalu buka dengan Text Editor (Notepad/VSCode/View Source). Ada catatan tertinggal di sana.`,
+    points: 300,
+    description: 'Kami menyita sebuah gambar logo perusahaan. Secara visual tidak ada yang aneh, tapi intel kami yakin ada pesan rahasia disematkan ke dalam metadata (EXIF) gambar tersebut.',
     flag: 'CTF{st3g4n0_svg_m3t4d4t4_h1dd3n}',
-    points: 200,
     hints: [
-      { content: "File SVG sebenarnya memuat kode HTML/XML di belakang layar yang merender garis dan warna. Kamu bisa membacanya.", cost: 15 }
+      { content: 'Linux/Mac memiliki tool bernama `exiftool`. Web juga punya banyak pengekstraksi EXIF online.', cost: 40 },
+      { content: 'Cek pada kolom/field "Owner Name" di exif data.', cost: 60 }
     ],
   },
   {
@@ -129,6 +130,182 @@ const challenges = [
       { content: "Input: `file:///app/secret-flag.txt`", cost: 50 }
     ],
   },
+  // --- 15 NEW EXPANSION CHALLENGES ---
+  {
+    title: 'Serangan Silang (XSS)',
+    category: 'web',
+    difficulty: 'medium',
+    points: 200,
+    description: 'Form Pencarian di Blog ini akan menampilkan apapun yang Anda ketikkan kembali ke layar tanpa difilter asalkan URL disebarkan (Reflected XSS). Bisakah mengeksekusi Window Alert?',
+    flag: 'CTF{xss_f1lt3r_byp4ss_p4yl04d}',
+    hints: [
+      { content: 'Gunakan tag HTML <script>.', cost: 20 },
+      { content: 'Jika script ditolak, coba payload berbasis event, contoh: <img src=x onerror=alert(1)>', cost: 50 }
+    ]
+  },
+  {
+    title: 'Bencana Deserialisasi',
+    category: 'web',
+    difficulty: 'insane',
+    points: 900,
+    description: 'Aplikasi Node.js lama menggunakan "node-serialize" lalu melakukan eksekusi eval() pada input JSON yang disuplai oleh User.',
+    flag: 'CTF{d3s3r14l1z4t10n_1nj3ct10n_f4t4l}',
+    hints: [
+      { content: 'JavaScript IIFE (Immediately Invoked Function Expression) bisa memicu eksekusi ketika string di-deserialize.', cost: 100 },
+      { content: 'Payload format: {"rce":"_$$ND_FUNC$$_function(){require(\\\'child_process\\\').exec(\\\'ls\\\')}()"}', cost: 250 }
+    ]
+  },
+  {
+    title: 'API Leaks (Insecure Object)',
+    category: 'web',
+    difficulty: 'hard',
+    points: 500,
+    description: 'Kamu baru mendaftar dengan ID `1054`. Bisakah kamu melihat data profile milik CEO yang mendaftar sangat awal di ID `1`?',
+    flag: 'CTF{1d0r_api_us3r_d4t4_l34k}',
+    hints: [
+      { content: 'Perhatikan Request URL yang memanggil data kamu: /api/v1/user?id=1054.', cost: 50 },
+      { content: 'Ini disebut kerentanan IDOR. Ganti saja angka id=1054 menjadi id=1.', cost: 100 }
+    ]
+  },
+  {
+    title: 'Pecahan RSA',
+    category: 'crypto',
+    difficulty: 'insane',
+    points: 1000,
+    description: 'Kami mencegat komunikasi. N=3233, e=17, c=855. Temukan p dan q lalu dekripsikan pesan rahasianya!',
+    flag: 'CTF{rs4_f4ct0r1z4t10n_sm4ll_pr1m3s}',
+    hints: [
+      { content: 'Gunakan Factordb.com untuk memfaktorisasi modulus N menjadi P dan Q.', cost: 150 },
+      { content: 'Dalam kasus ini P=61 dan Q=53. Sekarang hitung Phi(N) dan Private Key (d).', cost: 300 }
+    ]
+  },
+  {
+    title: 'Pengelompokan Penguin (AES-ECB)',
+    category: 'crypto',
+    difficulty: 'medium',
+    points: 350,
+    description: 'Pola enkripsi ini sangat lucu. Jika kamu meng-enkripsi foto penguin berekstensi sama dengan warna seragam, piksel AES-ECB akan menghasilkan bayangan penguin yang sama.',
+    flag: 'CTF{43s_3cb_p3ngu1n_p4tt3rn}',
+    hints: [
+      { content: 'AES dengan mode ECB tidak menggunakan Initialization Vector (IV). Plaintext sama = Ciphertext sama.', cost: 50 },
+    ]
+  },
+  {
+    title: 'Nyanyian Paus X',
+    category: 'forensics',
+    difficulty: 'hard',
+    points: 550,
+    description: 'Sebuah file ".wav" rekaman suara paus dibagikan di internet. Anehnya suara bergemuruh di detik ke-12. Analisa sinyal ini secara visual.',
+    flag: 'CTF{sp3ctr0gr4m_4ud10_h1dd3n_m3ss4g3}',
+    hints: [
+      { content: 'Kadang suara bukan untuk di dengar, tapi untuk dilihat puncaknya.', cost: 50 },
+      { content: 'Gunakan software seperti Audacity. Ubah mode View dari Waveform menjadi Spectrogram.', cost: 150 }
+    ]
+  },
+  {
+    title: 'Vampir Trafik (PCAP)',
+    category: 'forensics',
+    difficulty: 'medium',
+    points: 400,
+    description: 'Kami menyita laptop tersangka dan menangkap lalu lintas jaringan. Di antara ribuan baris pertukaran data TCP, ada satu transaksi HTTP kredensial terkirim tanpa SSL.',
+    flag: 'CTF{w1r3sh4rk_htt0p_pl41nt3xt_c4ught}',
+    hints: [
+      { content: 'Buka file .pcap menggunakan Wireshark.', cost: 50 },
+      { content: 'Ketik "http.request.method == POST" di kotak filter Wireshark, cari pengiriman formulir login.', cost: 100 }
+    ]
+  },
+  {
+    title: 'Penambang Memori',
+    category: 'forensics',
+    difficulty: 'insane',
+    points: 950,
+    description: 'Ditemukan file dump RAM dari mesin Windows yang terinfeksi ransomware vmem. Cari proses jahat lewat analisis memori jarak jauh.',
+    flag: 'CTF{v0l4t1l1ty_m3m0ry_f0r3ns1cs}',
+    hints: [
+      { content: 'Tools andalan untuk ini adalah Volatility.', cost: 100 },
+      { content: 'Jalankan command `volatility -f mem.vmem --profile=Win7SP1x64 pstree`. Tersangka utamanya adalah cmd.exe palsu.', cost: 250 }
+    ]
+  },
+  {
+    title: 'Tumpahan Biner (Hex)',
+    category: 'reverse',
+    difficulty: 'easy',
+    points: 150,
+    description: 'Sebuah program C gagal di run. Coba lihat versi Hexadecimanya dari file output ".bin".',
+    flag: 'CTF{h3xdump_str1ngs_c4t_v1s1bl3}',
+    hints: [
+      { content: 'Kamu bisa mengekstrak teks dari eksekusi biner menggunakan command `strings namafile.bin`.', cost: 20 },
+    ]
+  },
+  {
+    title: 'Dekompilasi Android',
+    category: 'reverse',
+    difficulty: 'hard',
+    points: 650,
+    description: 'Aplikasi pencatat PIN Bank bernama "BankAsta.apk" memiliki password hardcoded di dalam Source Code Javanya. Bedah APK itu!',
+    flag: 'CTF{4pk_j4dx_d3c0mp1l3r_h4rdc0d3d}',
+    hints: [
+      { content: 'File APK pada dasarnya hanyalah arsip ZIP.', cost: 50 },
+      { content: 'Gunakan alat bantu JD-GUI atau JADX untuk membaca ulang file kelas Dex menjadi .java yang terbaca.', cost: 150 }
+    ]
+  },
+  {
+    title: 'Teka Teki Logika Keras',
+    category: 'misc',
+    difficulty: 'medium',
+    points: 300,
+    description: 'Jika 1 adalah 3, 2 adalah 3, 3 adalah 5, 4 adalah 4, 5 adalah 4... Siapa sangka bahwa jumlah huruf mengurung solusinya.',
+    flag: 'CTF{l0g1c_l3ngt_0f_th3_w0rd5}',
+    hints: [
+      { content: 'Coba eja angka tersebut menggunakan bahasa Inggris: One (3 huruf). Two (3 huruf).', cost: 100 },
+    ]
+  },
+  {
+    title: 'Buffer Meluap (Pwn)',
+    category: 'pwn',
+    difficulty: 'insane',
+    points: 1200,
+    description: 'Fungsi C `gets(buffer)` digunakan untuk menerima 64 bit input. Jika kamu mengirim 120 huruf "A", program ini akan Crash. Ganti alamat EIP ke alamat fungsi win() yang rahasia.',
+    flag: 'CTF{buff3r_0v3rfl0w_r3turn_t0_w1n}',
+    hints: [
+      { content: 'Temukan titik offset jatuhnya Segment Fault menggunakan pattern generator.', cost: 200 },
+      { content: 'Timpa padding + offset lalu gabungkan alamat byte `\\xfc\\x84\\x04\\x08` dalam little endian.', cost: 400 }
+    ]
+  },
+  {
+    title: 'Return to Libc',
+    category: 'pwn',
+    difficulty: 'insane',
+    points: 1500,
+    description: 'Server sekarang menjalankan No-Execute (NX) bit. Segmen memori tidak bisa dieksekusi. Pakai senjata musuh kembali ke mereka, panggil fungsi `system()` dari library C standar!',
+    flag: 'CTF{r0p_r3turn_t0_l1bc_sh3ll_p0p}',
+    hints: [
+      { content: 'Tekniknya adalah Return Oriented Programming (ROP).', cost: 200 },
+      { content: 'Bocor alamat memori libc menggunakan GOT (Global Offset Table) dari `puts`', cost: 500 }
+    ]
+  },
+  {
+    title: 'Manejemen Format String',
+    category: 'pwn',
+    difficulty: 'hard',
+    points: 750,
+    description: 'Script `printf(user_input)` dijalankan begitu saja. Gunakan string modifier `%x` untuk membaca stack dan `%n` untuk menulis ke memori tanpa izin.',
+    flag: 'CTF{pr1ntf_f0rm4t_str1ng_m3m_l34k}',
+    hints: [
+      { content: 'Masukan payload `%p %p %p %p` untuk membaca stack alamat secara beruntung.', cost: 150 },
+    ]
+  },
+  {
+    title: 'XOR Klasik Berjalan',
+    category: 'crypto',
+    difficulty: 'easy',
+    points: 150,
+    description: 'Kamu menemukan dua deret hexadecimal yang tampak acak, tapi kami tahu panjang kuncinya selalu sama. Kunci XOR: AstaCorp.',
+    flag: 'CTF{x0r_k3y_m4tch1ng_b4s1c}',
+    hints: [
+      { content: 'Gunakan script Python sederhana atau CyberChef operasi XOR, dan tulis "AstaCorp" sebagai kuncinya di mode UTF8.', cost: 50 }
+    ]
+  }
 ];
 
 // --- BOXGROUND: ASTACORP CHALLENGES (10 FLAGS) ---

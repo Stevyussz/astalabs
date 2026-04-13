@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { useState } from 'react';
+import { calculateLevel } from '@/lib/levelUtils';
 
 const navLinks = [
   { href: '/academy', label: 'Academy' },
@@ -84,7 +85,7 @@ export function Navbar() {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <span style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', lineHeight: 1.2 }}>{session.user.username}</span>
-                    <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono,monospace', color: '#00ff88', lineHeight: 1.2 }}>{session.user.score} pts</span>
+                    <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono,monospace', color: '#00ff88', lineHeight: 1.2 }}>Lvl {calculateLevel(session.user.score)} <span style={{ opacity: 0.5 }}>• {session.user.score} pts</span></span>
                   </div>
                 </Link>
                 <button

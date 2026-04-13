@@ -7,6 +7,7 @@ import Challenge from '@/models/Challenge';
 import User from '@/models/User';
 import AstaCorpClientUI from './AstaCorpClientUI';
 import Link from 'next/link';
+import { calculateLevel } from '@/lib/levelUtils';
 
 export const metadata: Metadata = {
   title: 'Box: AstaCorp | AstaLabs',
@@ -20,12 +21,17 @@ export default async function AstaCorpBoxPage() {
 
   // Fetch astacorp challenges directly from DB
   await connectDB();
-  
-  // We identify Box challenges by a unique string in the ID or Category
-  const challengesDocs = await Challenge.find({ category: 'box-astacorp' }).sort({ points: 1 }).lean();
                              
   // Get user's solved info
   const userDoc = await User.findOne({ username: ((session.user) as any).username }).lean();
+  
+  if (!userDoc || calculateLevel(userDoc.score) < 5) {
+     redirect('/boxground');
+  }
+
+  // We identify Box challenges by a unique string in the ID or Category
+  const challengesDocs = await Challenge.find({ category: 'box-astacorp' }).sort({ points: 1 }).lean();
+                              
   const solvedIds = (userDoc?.solvedChallenges || []).map((id: any) => id.toString());
 
   // Convert ObjectIds to strings to pass to client
