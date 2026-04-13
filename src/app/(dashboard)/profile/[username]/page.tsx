@@ -7,10 +7,11 @@ import { Icons } from '@/components/ui/Icons';
 import { calculateBadges } from '@/lib/badgeUtils';
 import { getLevelProgress } from '@/lib/levelUtils';
 
-export async function generateMetadata({ params }: { params: { username: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
   return {
-    title: `${decodeURIComponent(params.username)} | Hacker Profile`,
-    description: `Public CTF records for Hacker ${decodeURIComponent(params.username)}`
+    title: `${decodeURIComponent(resolvedParams.username)} | Hacker Profile`,
+    description: `Public CTF records for Hacker ${decodeURIComponent(resolvedParams.username)}`
   };
 }
 
@@ -25,9 +26,10 @@ const getIcon = (name: string, size = 24, color = '#fff') => {
   return <Icons.Zap size={size} color={color} />;
 };
 
-export default async function HackerProfilePage({ params }: { params: { username: string } }) {
+export default async function HackerProfilePage({ params }: { params: Promise<{ username: string }> }) {
   await connectDB();
-  const rawUsername = decodeURIComponent(params.username);
+  const resolvedParams = await params;
+  const rawUsername = decodeURIComponent(resolvedParams.username);
   
   const userDoc = await User.findOne({ username: { $regex: new RegExp(`^${rawUsername}$`, 'i') } })
     .populate('solvedChallenges', 'category points')
