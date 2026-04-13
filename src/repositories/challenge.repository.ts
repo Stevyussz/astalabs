@@ -14,7 +14,13 @@ export class ChallengeRepository {
     const { category, difficulty, search, page = 1, limit = 20 } = filter;
     const query: Record<string, unknown> = { isActive: true };
 
-    if (category) query.category = category;
+    if (category) {
+       query.category = category;
+    } else {
+       // Secara default, sembunyikan challenge yang masuk ke dalam Boxground (category berawalan 'box-')
+       query.category = { $not: /^box-/ };
+    }
+    
     if (difficulty) query.difficulty = difficulty;
     if (search) {
       query.$text = { $search: search };

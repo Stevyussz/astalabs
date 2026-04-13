@@ -9,7 +9,8 @@ export type ChallengeCategory =
   | 'forensics'
   | 'pwn'
   | 'reverse'
-  | 'misc';
+  | 'misc'
+  | 'box-astacorp';
 
 export type ChallengeDifficulty = 'easy' | 'medium' | 'hard' | 'insane';
 

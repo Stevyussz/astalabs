@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Icons } from '@/components/ui/Icons';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 
 export const metadata: Metadata = {
@@ -8,29 +9,29 @@ export const metadata: Metadata = {
   description: 'Materi edukasi cybersecurity lengkap dari awal sampai advanced.',
 };
 
-const MODULES = [
-  {
-    id: 'web-101',
-    title: 'Web Security 101',
-    description: 'Pahami pondasi keamanan web. Mulai dari inspek kode sumber, hingga eksploitasi API sederhana.',
-    icon: <Icons.Globe size={32} color="#3b82f6" />,
-    color: '#3b82f6',
-    status: 'tersedia',
-    lessons: 3,
-  },
-  {
-    id: 'crypto-dasar',
-    title: 'Kriptografi Dasar',
-    description: 'Belajar bagaimana pesan disandikan dan disembunyikan menggunakan encoding dan enkripsi klasik.',
-    icon: <Icons.Shield size={32} color="#a855f7" />,
-    color: '#a855f7',
-    status: 'segera',
-    lessons: 0,
-  },
-];
+import { COURSES } from '@/data/academy';
+
+// Mapping icons dynamically based on course ID
+const getIconForCourse = (courseId: string) => {
+  if (courseId.includes('web')) return <Icons.Globe size={32} color="#3b82f6" />;
+  if (courseId.includes('crypto')) return <Icons.Shield size={32} color="#a855f7" />;
+  return <Icons.Box size={32} color="#00ff88" />;
+};
+
+const getColorForCourse = (courseId: string) => {
+  if (courseId.includes('web')) return '#3b82f6';
+  if (courseId.includes('crypto')) return '#a855f7';
+  return '#00ff88';
+};
 
 export default async function AcademyPage() {
   const session = await auth();
+  
+  
+  if (!session) {
+    redirect('/login');
+  }
+
   const userCreatedAt = session?.user ? (session.user as any).createdAt : null;
   
   if (userCreatedAt) {
@@ -77,47 +78,52 @@ export default async function AcademyPage() {
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
-        {MODULES.map(mod => (
-          <Link
-            key={mod.id}
-            href={mod.status === 'tersedia' ? `/academy/${mod.id}/1` : '#'}
-            style={{
-              textDecoration: 'none',
-              cursor: mod.status === 'tersedia' ? 'pointer' : 'default',
-              opacity: mod.status === 'tersedia' ? 1 : 0.6,
-            }}
-          >
-            <div className={`academy-card ${mod.status === 'tersedia' ? 'academy-card-available' : ''}`} style={{
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 16,
-              padding: 24,
-              height: '100%',
-              transition: 'all 0.2s',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
-              position: 'relative',
-              overflow: 'hidden',
-            }}>
-              <div style={{ position: 'absolute', top: -20, right: -20, opacity: 0.05, transform: 'scale(3)' }}>
-                {mod.icon}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {mod.icon}
+        {COURSES.map(mod => {
+          const icon = getIconForCourse(mod.id);
+          const status = mod.chapters.length > 0 ? 'tersedia' : 'segera';
+          
+          return (
+            <Link
+              key={mod.id}
+              href={status === 'tersedia' ? `/academy/${mod.id}/${mod.chapters[0]?.id || '1'}` : '#'}
+              style={{
+                textDecoration: 'none',
+                cursor: status === 'tersedia' ? 'pointer' : 'default',
+                opacity: status === 'tersedia' ? 1 : 0.6,
+              }}
+            >
+              <div className={`academy-card ${status === 'tersedia' ? 'academy-card-available' : ''}`} style={{
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 16,
+                padding: 24,
+                height: '100%',
+                transition: 'all 0.2s',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+                position: 'relative',
+                overflow: 'hidden',
+              }}>
+                <div style={{ position: 'absolute', top: -20, right: -20, opacity: 0.05, transform: 'scale(3)' }}>
+                  {icon}
                 </div>
-                <div>
-                  <h2 style={{ fontSize: 18, fontWeight: 700, color: '#e2e8f0', margin: 0 }}>{mod.title}</h2>
-                  <span style={{ fontSize: 12, color: mod.status === 'tersedia' ? '#00ff88' : 'rgba(226,232,240,0.4)', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', fontWeight: 600 }}>
-                    {mod.status === 'tersedia' ? `${mod.lessons} Materi` : 'Coming Soon'}
-                  </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {icon}
+                  </div>
+                  <div>
+                    <h2 style={{ fontSize: 18, fontWeight: 700, color: '#e2e8f0', margin: 0 }}>{mod.title}</h2>
+                    <span style={{ fontSize: 12, color: status === 'tersedia' ? '#00ff88' : 'rgba(226,232,240,0.4)', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', fontWeight: 600 }}>
+                      {status === 'tersedia' ? `${mod.chapters.length} Materi` : 'Coming Soon'}
+                    </span>
+                  </div>
                 </div>
+                <p style={{ fontSize: 14, color: 'rgba(226,232,240,0.5)', lineHeight: 1.6, margin: 0 }}>
+                  {mod.description}
+                </p>
               </div>
-              <p style={{ fontSize: 14, color: 'rgba(226,232,240,0.5)', lineHeight: 1.6, margin: 0 }}>
-                {mod.description}
-              </p>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
       <style>{`
         .academy-card-available:hover {

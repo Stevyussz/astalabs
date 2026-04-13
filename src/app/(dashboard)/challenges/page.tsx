@@ -2,6 +2,7 @@
 // src/app/(dashboard)/challenges/page.tsx
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { ChallengeCard } from '@/components/features/ChallengeCard';
 import { CategoryFilter } from '@/components/features/CategoryFilter';
 import { Icons } from '@/components/ui/Icons';
@@ -59,6 +60,38 @@ export default function ChallengesPage() {
             ? `${solvedCount} ke-solve — gaskeun lanjutin!`
             : 'Login dulu buat nyatet progres kamu dan submit flag.'}
         </p>
+      </div>
+
+      {/* --- BOXGROUND BANNER --- */}
+      <div style={{ marginBottom: 40 }}>
+        <Link href="/boxground" style={{ textDecoration: 'none' }}>
+           <div style={{ 
+             background: 'linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(59,130,246,0.1) 100%)', 
+             border: '1px solid rgba(168,85,247,0.3)', 
+             borderRadius: 16, padding: '24px 32px', 
+             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+             transition: 'all 0.3s',
+             cursor: 'pointer'
+           }}
+           className="boxground-banner"
+           >
+             <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+               <div style={{ background: 'rgba(168,85,247,0.2)', padding: 16, borderRadius: 12 }}>
+                 <Icons.Box size={36} color="#a855f7" />
+               </div>
+               <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+                    <h2 style={{ fontSize: 24, fontWeight: 800, margin: 0, color: '#e2e8f0' }}>Boxground Arena</h2>
+                    <span style={{ fontSize: 11, padding: '4px 8px', borderRadius: 4, background: '#ef4444', color: '#fff', fontWeight: 800, letterSpacing: '1px' }}>EXPERT ONLY</span>
+                  </div>
+                  <p style={{ margin: 0, color: 'rgba(226,232,240,0.6)', fontSize: 15 }}>
+                    Misi individual kurang menantang? Retas ke dalam server tiruan utuh layaknya <i>HackTheBox</i> dengan 10+ Flag tersembunyi di dalamnya!
+                  </p>
+               </div>
+             </div>
+             <div style={{ color: '#a855f7', fontWeight: 800, fontSize: 24 }}>&rarr;</div>
+           </div>
+        </Link>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 320px) 1fr', gap: 32, alignItems: 'start' }} className="responsive-challenges-grid">
@@ -135,6 +168,11 @@ export default function ChallengesPage() {
             top: 0 !important;
             z-index: 10;
           }
+        }
+        .boxground-banner:hover {
+          transform: translateY(-4px);
+          border-color: rgba(168,85,247,0.6) !important;
+          box-shadow: 0 10px 30px rgba(168,85,247,0.15) !important;
         }
       `}</style>
     </div>

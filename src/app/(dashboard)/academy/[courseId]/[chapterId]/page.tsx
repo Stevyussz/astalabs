@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { notFound, useRouter } from 'next/navigation';
+import { notFound, useRouter, redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Icons } from '@/components/ui/Icons';
 import { Badge } from '@/components/ui/Badge';
@@ -16,7 +16,12 @@ import { use } from 'react';
 export default function AcademyChapterPage({ params }: { params: Promise<{ courseId: string; chapterId: string }> }) {
   const resolvedParams = use(params);
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect('/login');
+    },
+  });
 
   const course = getCourseById(resolvedParams.courseId);
   const chapterIdx = course?.chapters.findIndex(c => c.id === resolvedParams.chapterId) ?? -1;

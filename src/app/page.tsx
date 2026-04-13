@@ -46,7 +46,7 @@ export default function HomePage() {
             backgroundClip: 'text',
             filter: 'drop-shadow(0 0 24px rgba(0,255,136,0.5))',
           }}>
-            Uji Nyali.
+            Capture The Flag.
           </span>
         </h1>
 

@@ -24,7 +24,7 @@ const challengeSchema = new Schema<IChallengeDocument>(
     category: {
       type: String,
       required: [true, 'Category is required'],
-      enum: ['web', 'crypto', 'forensics', 'pwn', 'reverse', 'misc'] satisfies ChallengeCategory[],
+      enum: ['web', 'crypto', 'forensics', 'pwn', 'reverse', 'misc', 'box-astacorp'] satisfies ChallengeCategory[],
       index: true,
     },
     difficulty: {

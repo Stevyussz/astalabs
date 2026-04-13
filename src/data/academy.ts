@@ -116,6 +116,90 @@ export const COURSES: Course[] = [
         labInstruction: 'Kita menangkap sinyal transmisi alien. Signal ini nampak seperti encoded text. Gunakan instingmu, perhatikan pola karakternya, dan terjemahkan pesan tersebut untuk mendapatkan flag!',
       }
     ]
+  },
+  {
+    id: 'crypto-dasar',
+    title: 'Kriptografi Dasar',
+    description: 'Belajar bagaimana pesan disandikan dan disembunyikan menggunakan encoding dan enkripsi klasik.',
+    chapters: [
+      {
+        id: '1',
+        title: 'Bab 1: Pengantar Enkripsi & Sandi Caesar',
+        content: `
+          <p>Kriptografi adalah seni menyembunyikan pesan. Sebelum komputer ada, mata-mata Romawi Kuno menggunakan sandi rahasia untuk mengirim pesan di medan perang.</p>
+          <br/>
+          <h2 style="font-size:20px; font-weight:700; color:#e2e8f0; margin-bottom:8px">Sandi Caesar (Caesar Cipher)</h2>
+          <p>Julius Caesar mengamankan pesannya dengan menggeser huruf pada alfabet. Jika digeser 3 huruf (Rotasi 3), maka huruf 'A' berubah menjadi 'D', 'B' menjadi 'E', dst.</p>
+          <p>Karena alfabet cuma ada 26 huruf, mesin komputer bisa menebak paksa (Brute-force) sandi ini dengan sangat mudah dengan mencoba 26 kali kemungkinan rotasi (Rot1 sampai Rot25) sampai kata yang masuk akal muncul.</p>
+        `,
+        labUrl: '/labs/caesar-cipher',
+        labInstruction: 'Terdapat transmisi tersandi menggunakan pergeseran Caesar. Tebak paksa pergeserannya dan temukan FLAG aslinya di terminal samping!',
+      },
+      {
+        id: '2',
+        title: 'Bab 2: Steganografi (Menyembunyikan Data)',
+        content: `
+          <p>Berbeda dengan enkripsi yang membuat tulisan tidak bisa dibaca, <strong>Steganografi</strong> menyembunyikan fakta bahwa pesan itu ada sama sekali!</p>
+          <br/>
+          <h2 style="font-size:20px; font-weight:700; color:#e2e8f0; margin-bottom:8px">File Metadata & EXIF</h2>
+          <p>File digital (gambar, audio) bukan hanya berisi apa yang kamu lihat. Mereka memiliki 'Metadata' (data tentang data) berupa EXIF tag, pencipta, resolusi, atau bahkan komentar yang disembunyikan hacker.</p>
+          <p>Hacker pro bisa menyisipkan string rahasia di urutan byte terakhir dari suatu file, dan file tersebut akan masih terlihat normal saat dibuka!</p>
+        `,
+        labUrl: '/labs/stegano-exif',
+        labInstruction: 'Akses galeri gambar rahasia target. Gambarnya mungkin biasa saja, tapi cobalah unduh atau inspeksi lebih dalam karena ada harta karun yang ditanam di dalam gambar berformat SVG tersebut.',
+      }
+    ]
+  },
+  {
+    id: 'web-202',
+    title: 'Web Security 202 (Advanced)',
+    description: 'Saatnya bermain dengan database dan shell server. Berbahaya, hanya untuk expert.',
+    chapters: [
+      {
+        id: '1',
+        title: 'Bab 1: Database Injection (SQLi)',
+        content: `
+          <p>Kerentanan terbesar abad ini. SQL Injection terjadi saat sebuah website tidak membersihkan (sanitize) input user sebelum memberikannya ke Database (SQL).</p>
+          <br/>
+          <h2 style="font-size:20px; font-weight:700; color:#e2e8f0; margin-bottom:8px">Login Bypass</h2>
+          <p>Query login umumnya begini: <code>SELECT * FROM users WHERE username='$user' AND password='$password'</code>.</p>
+          <p>Apa jadinya kalau username diisi: <code>admin' OR '1'='1</code>?</p>
+          <div style="padding:16px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); font-family:monospace; color:#fca5a5; border-radius:8px; margin: 16px 0">
+            SELECT * FROM users WHERE username='admin' OR '1'='1' AND password='...'
+          </div>
+          <p>Karena pernyataan "1=1" itu selalu BENAR, logic Database akan menganggap login sukses, dan kamu masuk sebagai Admin meskipun tanpa password asli!</p>
+        `,
+        labUrl: '/labs/sqli-login',
+        labInstruction: 'Bobol sistem login bank ini. Gunakan pengetahuan SQL Injection-mu. Cobalah merubah struktur kodenya lewat kolom input username menggunakan pola boolean OR 1=1.',
+      },
+      {
+        id: '2',
+        title: 'Bab 2: Command Injection (RCE)',
+        content: `
+          <p>Mimpi buruk terbesar bagi pemilik web adalah RCE (Remote Code Execution) atau eksekusi perintah sistem jarak jauh.</p>
+          <br/>
+          <h2 style="font-size:20px; font-weight:700; color:#e2e8f0; margin-bottom:8px">Penyisipan Shell</h2>
+          <p>Bayangkan web developer membuat fitur untuk mengecek ping jaringan pengunjung. Di *backend*, kode mereka mungkin mengeksekusi shell server asli: <code>ping -c 4 $ip_address</code>.</p>
+          <p>Di Linux, kita bisa menggabungkan banyak perintah terminal dengan pemisah titik koma (<code>;</code>) atau <code>&&</code>.</p>
+          <p>Jika IP diisi dengan <code>127.0.0.1; ls -la</code>, server yang lemah akan menjalankan: <code>ping -c 4 127.0.0.1; ls -la</code>, dan <i>BAM</i>, sistem akan menampilkan data internalnya kepada hacker.</p>
+        `,
+        labUrl: '/labs/cmd-ping',
+        labInstruction: 'Server ini memiliki utilitas Jaringan (Ping). Gunakan operator Linux (contohnya titik koma / semicolon) untuk menyisipkan perintah \'cat flag.txt\' mengikuti input IP.',
+      },
+      {
+        id: '3',
+        title: 'Bab 3: Server-Side Request Forgery (SSRF)',
+        content: `
+          <p>Web server target bisa "dibujuk" untuk menjelajah intrenet atau jaringan internalnya atas perintah hacker.</p>
+          <br/>
+          <h2 style="font-size:20px; font-weight:700; color:#e2e8f0; margin-bottom:8px">Mencuri Berkas Internal</h2>
+          <p>Misal ada fitur "Load Image" yang menerima parameter URL. Server akan mengambil isinya dan memberikannya ke klien.</p>
+          <p>Hacker bisa mengisi URL tersebut dengan protokol selain HTTP. Coba saja berikan <code>file:///etc/passwd</code> (lokasi data user linux). Server akan membaca file lokal miliknya sendiri dan mengirimkannya secara sukarela ke hacker!</p>
+        `,
+        labUrl: '/labs/ssrf-fetch',
+        labInstruction: 'Fitur "Asta Image Proxy" dapat mengambil resource dari URL. Cobalah manfaatkan protokol sistem (file://) untuk membaca isi file konfidensial server di path: /app/secret-flag.txt',
+      }
+    ]
   }
 ];
 
