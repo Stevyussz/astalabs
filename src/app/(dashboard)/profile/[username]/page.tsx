@@ -31,6 +31,9 @@ export default async function HackerProfilePage({ params }: { params: Promise<{ 
   const resolvedParams = await params;
   const rawUsername = decodeURIComponent(resolvedParams.username);
   
+  // Force Turbopack to NOT tree-shake the Challenge model (vital for mongoose populate!)
+  void Challenge;
+
   const userDoc = await User.findOne({ username: { $regex: new RegExp(`^${rawUsername}$`, 'i') } })
     .populate('solvedChallenges', 'category points')
     .lean() as any;

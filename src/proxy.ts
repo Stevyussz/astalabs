@@ -10,7 +10,6 @@ export async function proxy(request: NextRequest) {
   // Protected route patterns
   const isProtected =
     pathname.startsWith('/challenges') ||
-    pathname.startsWith('/profile') ||
     (pathname.startsWith('/api/') &&
       !pathname.startsWith('/api/auth') &&
       !pathname.startsWith('/api/challenge') &&
