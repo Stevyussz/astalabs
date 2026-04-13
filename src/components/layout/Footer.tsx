@@ -31,10 +31,15 @@ export function Footer() {
             ))}
           </nav>
 
-          {/* Copyright */}
-          <p style={{ fontSize: 12, color: 'rgba(226,232,240,0.35)', fontFamily: 'JetBrains Mono, monospace' }}>
-            © {new Date().getFullYear()} AstaLabs. Amankan flag, amankan dunia.
-          </p>
+          {/* Copyright & Watermark */}
+          <div style={{ textAlign: 'right' }}>
+            <p style={{ fontSize: 12, color: 'rgba(226,232,240,0.35)', fontFamily: 'JetBrains Mono, monospace', marginBottom: 4 }}>
+              © {new Date().getFullYear()} AstaLabs. Amankan flag, amankan dunia.
+            </p>
+            <p style={{ fontSize: 11, color: 'rgba(226,232,240,0.3)', fontFamily: 'inherit' }}>
+              Developed by <a href="https://yusrilastaghina.my.id/" target="_blank" rel="noopener noreferrer" style={{ color: '#00ff88', textDecoration: 'none', fontWeight: 600 }}>Ahmad Yusril Astaghina</a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -4,8 +4,9 @@ import Link from 'next/link';
 import { Icons } from '@/components/ui/Icons';
 
 export const metadata: Metadata = {
-  title: 'AstaLabs | Academy & Hacker Playground',
-  description: 'Platform edukasi cybersecurity end-to-end. Dari teori dasar di Academy hingga praktik eksploitasi live di Playground.',
+  title: 'AstaLabs CTF by Yusril Astaghina | #1 Platform Hacking & Cybersecurity',
+  description: 'AstaLabs CTF adalah platform edukasi cybersecurity end-to-end karya Yusril Astaghina (Stevyussz). Belajar hacking dari teori dasar di Academy hingga praktik eksploitasi live di Boxground & Playground nyata.',
+  keywords: ['AstaLabs', 'AstaLabs CTF', 'astalabs yusril', 'apa itu astalabs', 'CTF indonesia', 'capture the flag', 'hacking academy', 'belajar cybersecurity', 'Yusril Astaghina', 'Stevyussz', 'AstaLabs Expert CTF'],
 };
 
 const stats = [
