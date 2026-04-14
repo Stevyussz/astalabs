@@ -48,9 +48,29 @@ export class SubmissionService {
     // 4. Timing-safe flag comparison
     const isCorrect = compareFlag(flag, challenge.flagHash);
 
-    // 5. If correct, update user atomically with anti-race-condition protection
+    // 5. If correct, check blood status and update user atomically
+    let awardedPoints = isCorrect ? challenge.points : 0;
+    let bloodTier: number | undefined = undefined;
+
     if (isCorrect) {
-      const updateSuccess = await userRepository.addSolvedChallenge(userId, challengeId, challenge.points);
+      // Calculate blood rank! 
+      const existingSolvesCount = await submissionRepository.countCorrectSolves(challengeId);
+      
+      let bonusXp = 0;
+      if (existingSolvesCount === 0) {
+        bloodTier = 1;
+        bonusXp = 50;
+      } else if (existingSolvesCount === 1) {
+        bloodTier = 2;
+        bonusXp = 30;
+      } else if (existingSolvesCount === 2) {
+        bloodTier = 3;
+        bonusXp = 15;
+      }
+
+      awardedPoints = challenge.points + bonusXp;
+
+      const updateSuccess = await userRepository.addSolvedChallenge(userId, challengeId, awardedPoints);
       // If updateSuccess is null, they already have it in their array (due to concurrent attempt)
       // Only increment global challenge stats & scoreboard if we actually awarded points
       if (updateSuccess) {
@@ -65,14 +85,20 @@ export class SubmissionService {
       challengeId,
       submittedFlag: flag,
       isCorrect,
-    });
+      bloodTier,
+    } as any);
 
+    let successMessage = `Correct! You earned ${awardedPoints} points!`;
+    if (bloodTier === 1) successMessage = `FIRST BLOOD!!🩸 +50 Bonus XP! Total: ${awardedPoints} points!`;
+    else if (bloodTier === 2) successMessage = `SECOND BLOOD!🩸 +30 Bonus XP! Total: ${awardedPoints} points!`;
+    else if (bloodTier === 3) successMessage = `THIRD BLOOD!🩸 +15 Bonus XP! Total: ${awardedPoints} points!`;
+    
     return {
       isCorrect,
       message: isCorrect
-        ? `Correct! You earned ${challenge.points} points!`
+        ? successMessage
         : 'Incorrect flag. Try again!',
-      pointsAwarded: isCorrect ? challenge.points : undefined,
+      pointsAwarded: isCorrect ? awardedPoints : undefined,
     };
   }
 

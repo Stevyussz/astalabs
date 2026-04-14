@@ -6,6 +6,7 @@ import Challenge from '@/models/Challenge';
 import { Icons } from '@/components/ui/Icons';
 import { calculateBadges } from '@/lib/badgeUtils';
 import { getLevelProgress } from '@/lib/levelUtils';
+import { RadarSkillChart } from '@/components/ui/RadarSkillChart';
 
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
@@ -46,8 +47,14 @@ export default async function HackerProfilePage({ params }: { params: Promise<{ 
   const levelInfo = getLevelProgress(userDoc.score);
   const badges = calculateBadges(solvedChallenges);
 
+  // Compute stats for Radar Chart
+  const categoryCounts: Record<string, number> = {};
+  solvedChallenges.forEach((ch: any) => {
+    categoryCounts[ch.category] = (categoryCounts[ch.category] || 0) + 1;
+  });
+
   return (
-    <div style={{ maxWidth: 850, margin: '0 auto', padding: '60px 24px' }}>
+    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '60px 24px' }}>
       
       {/* ── CARD HEADER ── */}
       <div style={{
@@ -122,16 +129,23 @@ export default async function HackerProfilePage({ params }: { params: Promise<{ 
         </div>
       </div>
 
-      {/* ── STATS CARDS ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20, marginTop: 40 }}>
-         <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 16, padding: 24, textAlign: 'center' }}>
-            <p style={{ fontSize: 13, color: 'rgba(226,232,240,0.5)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Total XP</p>
-            <p style={{ fontSize: 32, fontWeight: 900, fontFamily: 'JetBrains Mono, monospace', color: '#0ea5e9' }}>{userDoc.score}</p>
+      {/* ── STATS & RADAR MATRIX ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 1.5fr) minmax(300px, 1.5fr)', gap: 32, marginTop: 40 }}>
+         
+         {/* Left col: Basic Stats */}
+         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
+           <div style={{ background: 'linear-gradient(180deg, rgba(14,165,233,0.05) 0%, rgba(14,165,233,0.01) 100%)', border: '1px solid rgba(14,165,233,0.2)', borderRadius: 16, padding: 32, textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <p style={{ fontSize: 13, color: 'rgba(226,232,240,0.5)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Total XP</p>
+              <p style={{ fontSize: 48, fontWeight: 900, fontFamily: 'JetBrains Mono, monospace', color: '#0ea5e9', margin: 0, textShadow: '0 0 20px rgba(14,165,233,0.5)' }}>{userDoc.score}</p>
+           </div>
+           <div style={{ background: 'linear-gradient(180deg, rgba(245,158,11,0.05) 0%, rgba(245,158,11,0.01) 100%)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 16, padding: 32, textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <p style={{ fontSize: 13, color: 'rgba(226,232,240,0.5)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Flags Hacked</p>
+              <p style={{ fontSize: 48, fontWeight: 900, fontFamily: 'JetBrains Mono, monospace', color: '#f59e0b', margin: 0, textShadow: '0 0 20px rgba(245,158,11,0.5)' }}>{solvedChallenges.length}</p>
+           </div>
          </div>
-         <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 16, padding: 24, textAlign: 'center' }}>
-            <p style={{ fontSize: 13, color: 'rgba(226,232,240,0.5)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Flags Hacked</p>
-            <p style={{ fontSize: 32, fontWeight: 900, fontFamily: 'JetBrains Mono, monospace', color: '#f59e0b' }}>{solvedChallenges.length}</p>
-         </div>
+
+         {/* Right col: Skill Radar */}
+         <RadarSkillChart categoryCounts={categoryCounts} />
       </div>
 
       {/* ── BADGES SECTION ── */}

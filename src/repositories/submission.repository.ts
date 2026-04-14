@@ -58,6 +58,15 @@ export class SubmissionRepository {
       isCorrect: false,
     });
   }
+
+  /** Count total correct solves for a challenge globally (to determine First Bloods). */
+  async countCorrectSolves(challengeId: string): Promise<number> {
+    await connectDB();
+    return Submission.countDocuments({
+      challengeId: new Types.ObjectId(challengeId),
+      isCorrect: true,
+    });
+  }
 }
 
 export const submissionRepository = new SubmissionRepository();

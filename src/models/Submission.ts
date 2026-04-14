@@ -2,7 +2,9 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import { ISubmission } from '@/types';
 
-export interface ISubmissionDocument extends Omit<ISubmission, '_id'>, Document {}
+export interface ISubmissionDocument extends Omit<ISubmission, '_id'>, Document {
+  bloodTier?: number;
+}
 
 const submissionSchema = new Schema<ISubmissionDocument>(
   {
@@ -27,6 +29,10 @@ const submissionSchema = new Schema<ISubmissionDocument>(
       type: Boolean,
       required: true,
       default: false,
+    },
+    bloodTier: {
+      type: Number,
+      default: null,
     },
   },
   {

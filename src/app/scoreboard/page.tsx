@@ -7,6 +7,7 @@ import { ScoreboardEntry } from '@/types';
 import { PageSpinner } from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/Button';
 import { Icons } from '@/components/ui/Icons';
+import { LiveAttackFeed } from '@/components/features/LiveAttackFeed';
 
 export default function ScoreboardPage() {
   const { data: session } = useSession();
@@ -125,7 +126,14 @@ export default function ScoreboardPage() {
           <PageSpinner />
         </div>
       ) : (
-        <ScoreboardTable entries={entries} currentUserId={session?.user?.id} />
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex-1 overflow-x-auto min-w-0">
+            <ScoreboardTable entries={entries} currentUserId={session?.user?.id} />
+          </div>
+          <div className="w-full lg:w-[350px] shrink-0">
+            <LiveAttackFeed />
+          </div>
+        </div>
       )}
     </div>
   );
